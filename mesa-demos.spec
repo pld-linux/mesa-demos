@@ -2,7 +2,7 @@ Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
 Version:	8.0.1
-Release:	0.1
+Release:	1
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
 Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
