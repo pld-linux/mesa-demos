@@ -8,10 +8,10 @@ Group:		Development/Libraries
 Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	320c2a4b6edc6faba35d9cb1e2a30bf4
 URL:		http://www.mesa3d.org/
+BuildRequires:	OpenGL-GLU-devel
+BuildRequires:	OpenGL-devel
 BuildRequires:	freeglut-devel
 BuildRequires:	glew-devel
-BuildRequires:	OpenGL-devel
-BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 Requires:	OpenGL-devel
@@ -42,7 +42,8 @@ Programy narzędziowe OpenGL z projektu Mesa3D: glxgears i glxinfo.
 %setup -q
 
 %build
-%configure
+%configure \
+	--disable-silent-rules
 
 # we only want glxinfo and glxgears to be built here
 %{__make} -C src/xdemos
@@ -54,8 +55,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_examplesdir}/%{name}-%{version}}
 install -p src/xdemos/{glxinfo,glxgears} $RPM_BUILD_ROOT%{_bindir}
 
 cp -a * $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-cd $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-%{__make} clean
+%{__make} -C $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} clean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
