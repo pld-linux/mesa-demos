@@ -2,7 +2,7 @@ Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
 Version:	8.0.1
-Release:	1
+Release:	2
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
 Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
@@ -10,11 +10,12 @@ Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.
 URL:		http://www.mesa3d.org/
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
-BuildRequires:	freeglut-devel
+BuildRequires:	OpenGL-glut-devel
 BuildRequires:	glew-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 Requires:	OpenGL-devel
+Requires:	OpenGL-glut-devel
 Obsoletes:	Mesa-demos
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -55,7 +56,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_examplesdir}/%{name}-%{version}}
 install -p src/xdemos/{glxinfo,glxgears} $RPM_BUILD_ROOT%{_bindir}
 
 cp -a * $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-%{__make} -C $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} clean
+%{__make} -C $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} distclean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
