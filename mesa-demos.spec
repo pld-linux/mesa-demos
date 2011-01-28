@@ -12,6 +12,8 @@ BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
 BuildRequires:	glew-devel
+BuildRequires:	pkgconfig
+BuildRequires:	rpm-pythonprov
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 Requires:	OpenGL-devel
