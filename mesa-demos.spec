@@ -3,14 +3,14 @@
 %bcond_without	egl	# EGL utilities
 %bcond_without	gles1	# GLESv1 utilities
 %bcond_without	gles2	# GLESv2 utilities
-%bcond_without	openvg	# OpenVG utilities
+%bcond_with	openvg	# OpenVG utilities
 %bcond_without	wayland	# Wayland support
 
 Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
 Version:	8.2.0
-Release:	1
+Release:	2
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
 Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
