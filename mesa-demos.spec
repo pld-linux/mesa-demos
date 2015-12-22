@@ -9,12 +9,12 @@
 Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
-Version:	8.2.0
-Release:	3
+Version:	8.3.0
+Release:	1
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
 Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	72613a2c8c013716db02e3ff59d29061
+# Source0-md5:	628e75c23c17394f11a316c36f8e4164
 URL:		http://www.mesa3d.org/
 %{?with_egl:BuildRequires:	EGL-devel}
 BuildRequires:	Mesa-libgbm-devel
@@ -132,20 +132,19 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_examplesdir}/%{name}-%{version}}
 
 install -p src/xdemos/{glxinfo,glxgears} $RPM_BUILD_ROOT%{_bindir}
 %if %{with egl}
-install -p src/egl/opengl/{eglinfo,eglgears_screen,eglgears_x11,peglgears} $RPM_BUILD_ROOT%{_bindir}
+install -p src/egl/opengl/{eglinfo,eglgears_x11,peglgears} $RPM_BUILD_ROOT%{_bindir}
 %if %{with gles1}
 install -p src/egl/opengles1/es1_info $RPM_BUILD_ROOT%{_bindir}
-install -p src/egl/opengles1/gears_screen $RPM_BUILD_ROOT%{_bindir}/es1gears_screen
 install -p src/egl/opengles1/gears_x11 $RPM_BUILD_ROOT%{_bindir}/es1gears_x11
 %endif
 %if %{with gles2}
-install -p src/egl/opengles2/{es2_info,es2gears_screen,es2gears_x11} $RPM_BUILD_ROOT%{_bindir}
+install -p src/egl/opengles2/{es2_info,es2gears_x11} $RPM_BUILD_ROOT%{_bindir}
 %if %{with wayland}
 install -p src/egl/opengles2/es2gears_wayland $RPM_BUILD_ROOT%{_bindir}
 %endif
 %endif
 %if %{with openvg}
-install -p src/egl/openvg/{lion,sp}_{screen,x11} $RPM_BUILD_ROOT%{_bindir}
+install -p src/egl/openvg/{lion,sp}_x11 $RPM_BUILD_ROOT%{_bindir}
 %endif
 %endif
 
@@ -167,7 +166,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with egl}
 %files -n mesa-utils-egl
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/eglgears_screen
 %attr(755,root,root) %{_bindir}/eglgears_x11
 %attr(755,root,root) %{_bindir}/eglinfo
 %attr(755,root,root) %{_bindir}/peglgears
@@ -177,7 +175,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n mesa-utils-gles1
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/es1_info
-%attr(755,root,root) %{_bindir}/es1gears_screen
 %attr(755,root,root) %{_bindir}/es1gears_x11
 %endif
 
@@ -185,7 +182,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n mesa-utils-gles2
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/es2_info
-%attr(755,root,root) %{_bindir}/es2gears_screen
 %attr(755,root,root) %{_bindir}/es2gears_x11
 %if %{with wayland}
 %attr(755,root,root) %{_bindir}/es2gears_wayland
@@ -195,8 +191,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with egl} && %{with openvg}
 %files -n mesa-utils-openvg
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/lion_screen
 %attr(755,root,root) %{_bindir}/lion_x11
-%attr(755,root,root) %{_bindir}/sp_screen
 %attr(755,root,root) %{_bindir}/sp_x11
 %endif
