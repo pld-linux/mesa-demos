@@ -9,12 +9,12 @@
 Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
-Version:	8.3.0
+Version:	8.4.0
 Release:	1
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
-Source0:	ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	628e75c23c17394f11a316c36f8e4164
+Source0:	https://mesa.freedesktop.org/archive/demos/%{name}-%{version}.tar.bz2
+# Source0-md5:	6b65a02622765522176d00f553086fa3
 URL:		http://www.mesa3d.org/
 %{?with_egl:BuildRequires:	EGL-devel}
 BuildRequires:	Mesa-libgbm-devel
