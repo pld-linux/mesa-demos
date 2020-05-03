@@ -18,7 +18,6 @@ Source0:	https://mesa.freedesktop.org/archive/demos/%{name}-%{version}.tar.bz2
 URL:		http://www.mesa3d.org/
 %{?with_egl:BuildRequires:	EGL-devel}
 BuildRequires:	Mesa-libgbm-devel
-%{?with_wayland:BuildRequires:	Mesa-libwayland-egl-devel}
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
@@ -31,6 +30,7 @@ BuildRequires:	glew-devel >= 1.5.4
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 %{?with_wayland:BuildRequires:	wayland-devel}
+%{?with_wayland:BuildRequires:	wayland-egl-devel}
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 Requires:	OpenGL-devel
