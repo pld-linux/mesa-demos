@@ -3,18 +3,17 @@
 %bcond_without	egl	# EGL utilities
 %bcond_without	gles1	# GLESv1 utilities
 %bcond_without	gles2	# GLESv2 utilities
-%bcond_with	openvg	# OpenVG utilities
 %bcond_without	wayland	# Wayland support
 
 Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
-Version:	8.4.0
+Version:	8.5.0
 Release:	1
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
-Source0:	https://mesa.freedesktop.org/archive/demos/%{name}-%{version}.tar.bz2
-# Source0-md5:	6b65a02622765522176d00f553086fa3
+Source0:	https://archive.mesa3d.org/demos/%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	75ac53b7c0b71a7f1b469a28a8df62f3
 URL:		http://www.mesa3d.org/
 %{?with_egl:BuildRequires:	EGL-devel}
 BuildRequires:	Mesa-libgbm-devel
@@ -23,19 +22,19 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
 %{?with_gles1:BuildRequires:	OpenGLESv1-devel}
 %{?with_gles2:BuildRequires:	OpenGLESv2-devel}
-%{?with_openvg:BuildRequires:	OpenVG-devel}
 BuildRequires:	freetype-devel >= 2
 BuildRequires:	glew-devel >= 1.5.4
 %{?with_egl:BuildRequires:	libdrm-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
+BuildRequires:	sed >= 4.0
 %{?with_wayland:BuildRequires:	wayland-devel}
 %{?with_wayland:BuildRequires:	wayland-egl-devel}
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 Requires:	OpenGL-devel
 Requires:	OpenGL-glut-devel
-Obsoletes:	Mesa-demos
+Obsoletes:	Mesa-demos < 7.9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -49,7 +48,8 @@ Summary:	OpenGL utilities from Mesa3D
 Summary(pl.UTF-8):	Programy narzędziowe OpenGL z projektu Mesa3D
 License:	MIT
 Group:		X11/Applications/Graphics
-Obsoletes:	Mesa-utils
+Obsoletes:	Mesa-utils < 7.9
+Obsoletes:	Mesa-utils-openvg < 8.5
 
 %description -n mesa-utils
 OpenGL utilities from Mesa3D: glxgears and glxinfo.
@@ -95,31 +95,22 @@ OpenGLESv2 utilities from Mesa3D: es2gears and es2_info.
 Programy narzędziowe OpenGLESv2 z projektu Mesa3D: es2gears i
 es2_info.
 
-%package -n mesa-utils-openvg
-Summary:	OpenVG utilities from Mesa3D
-Summary(pl.UTF-8):	Programy narzędziowe OpenVG z projektu Mesa3D
-License:	MIT
-Group:		Applications/Graphics
-
-%description -n mesa-utils-openvg
-OpenVG utilities from Mesa3D.
-
-%description -n mesa-utils-openvg -l pl.UTF-8
-Programy narzędziowe OpenVG z projektu Mesa3D.
-
 %prep
 %setup -q
 
+%{__sed} -i -e '1s,/usr/bin/env sh,/bin/sh,' ltmain.sh
+
 %build
 %configure \
+	--enable-autotools \
 	%{!?with_egl:--disable-egl} \
 	%{!?with_gles1:--disable-gles1} \
 	%{!?with_gles2:--disable-gles2} \
 	--disable-silent-rules \
-	%{!?with_openvg:--disable-vg} \
 	%{?with_egl:--enable-wayland}
 
 # we only want glxinfo and glxgears to be built here
+%{__make} -C src/glad
 %{__make} -C src/xdemos
 
 %if %{with egl}
@@ -142,9 +133,6 @@ install -p src/egl/opengles2/{es2_info,es2gears_x11} $RPM_BUILD_ROOT%{_bindir}
 %if %{with wayland}
 install -p src/egl/opengles2/es2gears_wayland $RPM_BUILD_ROOT%{_bindir}
 %endif
-%endif
-%if %{with openvg}
-install -p src/egl/openvg/{lion,sp}_x11 $RPM_BUILD_ROOT%{_bindir}
 %endif
 %endif
 
@@ -186,11 +174,4 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with wayland}
 %attr(755,root,root) %{_bindir}/es2gears_wayland
 %endif
-%endif
-
-%if %{with egl} && %{with openvg}
-%files -n mesa-utils-openvg
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/lion_x11
-%attr(755,root,root) %{_bindir}/sp_x11
 %endif
