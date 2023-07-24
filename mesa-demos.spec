@@ -8,13 +8,13 @@
 Summary:	Mesa Demos source code
 Summary(pl.UTF-8):	Kod źródłowy programów demonstrujących dla bibliotek Mesa
 Name:		mesa-demos
-Version:	8.5.0
+Version:	9.0.0
 Release:	1
 License:	various (MIT, SGI, GPL - see copyright notes in sources)
 Group:		Development/Libraries
-Source0:	https://archive.mesa3d.org/demos/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	75ac53b7c0b71a7f1b469a28a8df62f3
-URL:		http://www.mesa3d.org/
+Source0:	https://archive.mesa3d.org/demos/%{name}-%{version}.tar.xz
+# Source0-md5:	bd63d3d5b898851f09d87d6537843320
+URL:		https://www.mesa3d.org/
 %{?with_egl:BuildRequires:	EGL-devel}
 BuildRequires:	Mesa-libgbm-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -24,14 +24,22 @@ BuildRequires:	OpenGL-glut-devel
 %{?with_gles2:BuildRequires:	OpenGLESv2-devel}
 BuildRequires:	freetype-devel >= 2
 BuildRequires:	glew-devel >= 1.5.4
+%{?with_wayland:BuildRequires:	libdecor-devel >= 0.1}
+BuildRequires:	libstdc++-devel >= 6:7
 %{?with_egl:BuildRequires:	libdrm-devel}
+BuildRequires:	meson >= 0.59
+BuildRequires:	ninja >= 1.5
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	sed >= 4.0
+BuildRequires:	tar >= 1:1.22
 %{?with_wayland:BuildRequires:	wayland-devel}
 %{?with_wayland:BuildRequires:	wayland-egl-devel}
+%{?with_wayland:BuildRequires:	wayland-protocols >= 1.12}
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
+BuildRequires:	xz
 Requires:	OpenGL-devel
 Requires:	OpenGL-glut-devel
 Obsoletes:	Mesa-demos < 7.9
@@ -98,46 +106,42 @@ es2_info.
 %prep
 %setup -q
 
-%{__sed} -i -e '1s,/usr/bin/env sh,/bin/sh,' ltmain.sh
+%{__sed} -i -e '1s,/usr/bin/env python2,%{__python},' src/tests/api_speed.py
 
 %build
-%configure \
-	--enable-autotools \
-	%{!?with_egl:--disable-egl} \
-	%{!?with_gles1:--disable-gles1} \
-	%{!?with_gles2:--disable-gles2} \
-	--disable-silent-rules \
-	%{?with_egl:--enable-wayland}
+%meson build \
+	%{!?with_egl:-Degl=disabled} \
+	%{!?with_gles1:-Dgles1=disabled} \
+	%{!?with_gles2:-Dgles2=disabled} \
+	-Dglut=disabled \
+	-Dlibdrm=disabled \
+	-Dosmesa=disabled \
+	-Dvulkan=disabled \
+	%{!?with_wayland:-Dwayland=disabled} \
+	-Dwith-system-data-files=true
 
-# we only want glxinfo and glxgears to be built here
-%{__make} -C src/glad
-%{__make} -C src/xdemos
-
-%if %{with egl}
-%{__make} -C src/egl
-%endif
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_examplesdir}/%{name}-%{version}}
 
-install -p src/xdemos/{glxinfo,glxgears} $RPM_BUILD_ROOT%{_bindir}
+install -p build/src/xdemos/{glxinfo,glxgears} $RPM_BUILD_ROOT%{_bindir}
 %if %{with egl}
-install -p src/egl/opengl/{eglinfo,eglgears_x11,peglgears} $RPM_BUILD_ROOT%{_bindir}
+install -p build/src/egl/opengl/{eglinfo,eglgears_x11,peglgears} $RPM_BUILD_ROOT%{_bindir}
 %if %{with gles1}
-install -p src/egl/opengles1/es1_info $RPM_BUILD_ROOT%{_bindir}
-install -p src/egl/opengles1/gears_x11 $RPM_BUILD_ROOT%{_bindir}/es1gears_x11
+install -p build/src/egl/opengles1/es1_info $RPM_BUILD_ROOT%{_bindir}
+install -p build/src/egl/opengles1/gears_x11 $RPM_BUILD_ROOT%{_bindir}/es1gears_x11
 %endif
 %if %{with gles2}
-install -p src/egl/opengles2/{es2_info,es2gears_x11} $RPM_BUILD_ROOT%{_bindir}
+install -p build/src/egl/opengles2/{es2_info,es2gears_x11} $RPM_BUILD_ROOT%{_bindir}
 %if %{with wayland}
-install -p src/egl/opengles2/es2gears_wayland $RPM_BUILD_ROOT%{_bindir}
+install -p build/src/egl/opengles2/es2gears_wayland $RPM_BUILD_ROOT%{_bindir}
 %endif
 %endif
 %endif
 
-cp -a * $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-%{__make} -C $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} distclean
+cp -a meson* src $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
