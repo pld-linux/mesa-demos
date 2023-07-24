@@ -39,6 +39,7 @@ BuildRequires:	tar >= 1:1.22
 %{?with_wayland:BuildRequires:	wayland-protocols >= 1.12}
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
+%{?with_wayland:BuildRequires:	xorg-lib-libxkbcommon-devel}
 BuildRequires:	xz
 Requires:	OpenGL-devel
 Requires:	OpenGL-glut-devel
